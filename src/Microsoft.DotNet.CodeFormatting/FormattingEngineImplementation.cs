@@ -68,6 +68,12 @@ namespace Microsoft.DotNet.CodeFormatting
             set { _allowTables = value; }
         }
 
+        public bool UseTabs
+        {
+            get { return _options.UseTabs; }
+            set { _options.UseTabs = value; }
+        }
+
         public bool Verbose
         {
             get { return _verbose; }

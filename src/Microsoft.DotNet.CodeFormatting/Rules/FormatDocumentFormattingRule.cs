@@ -40,7 +40,13 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
 
         public async Task<SyntaxNode> ProcessAsync(Document document, SyntaxNode syntaxNode, CancellationToken cancellationToken)
         {
-            document = await Formatter.FormatAsync(document, cancellationToken: cancellationToken);
+            var options = document.Project.Solution.Workspace.Options;
+            if (_options.UseTabs)
+            {
+                options = options.WithChangedOption(FormattingOptions.UseTabs, LanguageNames.CSharp, true);
+            }
+
+            document = await Formatter.FormatAsync(document, options, cancellationToken: cancellationToken);
 
             if (!_options.PreprocessorConfigurations.IsDefaultOrEmpty)
             {
@@ -54,7 +60,7 @@ namespace Microsoft.DotNet.CodeFormatting.Rules
 
                     var newParseOptions = WithPreprocessorSymbols(parseOptions, list);
                     document = project.WithParseOptions(newParseOptions).GetDocument(document.Id);
-                    document = await Formatter.FormatAsync(document, cancellationToken: cancellationToken);
+                    document = await Formatter.FormatAsync(document, options, cancellationToken: cancellationToken);
                 }
             }
 

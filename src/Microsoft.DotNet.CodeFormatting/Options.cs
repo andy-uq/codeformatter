@@ -28,11 +28,14 @@ namespace Microsoft.DotNet.CodeFormatting
 
         internal IFormatLogger FormatLogger { get; set; }
 
+        internal bool UseTabs { get; set; }
+
         [ImportingConstructor]
         internal Options()
         {
             CopyrightHeader = FormattingDefaults.DefaultCopyrightHeader;
             FileNames = ImmutableArray<string>.Empty;
+            UseTabs = true;
             PreprocessorConfigurations = ImmutableArray<string[]>.Empty;
             FormatLogger = new ConsoleFormatLogger();
         }

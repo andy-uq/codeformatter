@@ -29,6 +29,7 @@ namespace CodeFormatter
             ImmutableArray<string>.Empty,
             null,
             allowTables: false,
+            useTabs: false,
             verbose: false);
 
         public static readonly CommandLineOptions ShowHelp = new CommandLineOptions(
@@ -40,6 +41,7 @@ namespace CodeFormatter
             ImmutableArray<string>.Empty,
             null,
             allowTables: false,
+            useTabs: false,
             verbose: false);
 
 
@@ -51,6 +53,7 @@ namespace CodeFormatter
         public readonly ImmutableArray<string> FileNames;
         public readonly string Language;
         public readonly bool AllowTables;
+        public readonly bool UseTabs;
         public readonly bool Verbose;
 
         public CommandLineOptions(
@@ -62,6 +65,7 @@ namespace CodeFormatter
             ImmutableArray<string> fileNames,
             string language,
             bool allowTables,
+            bool useTabs,
             bool verbose)
         {
             Operation = operation;
@@ -72,6 +76,7 @@ namespace CodeFormatter
             FormatTargets = formatTargets;
             Language = language;
             AllowTables = allowTables;
+            UseTabs = useTabs;
             Verbose = verbose;
         }
     }
@@ -152,6 +157,7 @@ namespace CodeFormatter
     /nocopyright    - Do not update the copyright message.
     /tables         - Let tables opt out of formatting by defining
                       DOTNET_FORMATTER
+    /tabs           - Use tabs for indentation instead of spaces
     /nounicode      - Do not convert unicode strings to escape sequences
     /rule(+|-)      - Enable (default) or disable the specified rule
     /rules          - List the available rules
@@ -182,6 +188,7 @@ namespace CodeFormatter
             var ruleMap = ImmutableDictionary<string, bool>.Empty;
             var language = LanguageNames.CSharp;
             var allowTables = false;
+            var useTabs = false;
             var verbose = false;
 
             for (int i = 0; i < args.Length; i++)
@@ -216,9 +223,8 @@ namespace CodeFormatter
                         return CommandLineParseResult.CreateError(error);
                     }
                 }
-                else if (comparer.Equals(arg, "/copyright-") || comparer.Equals(arg, "/nocopyright")) 
+                else if (comparer.Equals(arg, "/copyright-") || comparer.Equals(arg, "/nocopyright"))
                 {   // We still check /nocopyright for backwards compat
-
                     ruleMap = ruleMap.SetItem(FormattingDefaults.CopyrightRuleName, false);
                 }
                 else if (arg.StartsWith(LanguageSwitch, comparison))
@@ -253,6 +259,10 @@ namespace CodeFormatter
                 {
                     allowTables = true;
                 }
+                else if (comparer.Equals(arg, "/tabs"))
+                {
+                    useTabs = true;
+                }
                 else if (comparer.Equals(arg, "/rules"))
                 {
                     return CommandLineParseResult.CreateSuccess(CommandLineOptions.ListRules);
@@ -285,6 +295,7 @@ namespace CodeFormatter
                 fileNames.ToImmutableArray(),
                 language,
                 allowTables,
+                useTabs,
                 verbose);
             return CommandLineParseResult.CreateSuccess(options);
         }

@@ -96,6 +96,7 @@ namespace CodeFormatter
             engine.FileNames = options.FileNames;
             engine.CopyrightHeader = options.CopyrightHeader;
             engine.AllowTables = options.AllowTables;
+            engine.UseTabs = options.UseTabs;
             engine.Verbose = options.Verbose;
 
             if (!SetRuleMap(engine, options.RuleMap))
@@ -112,7 +113,7 @@ namespace CodeFormatter
         }
 
         private static async Task RunFormatItemAsync(IFormattingEngine engine, string item, string language, CancellationToken cancellationToken)
-        { 
+        {
             Console.WriteLine(Path.GetFileName(item));
             string extension = Path.GetExtension(item);
             if (StringComparer.OrdinalIgnoreCase.Equals(extension, ".rsp"))

@@ -318,7 +318,6 @@ End Class";
             [Fact]
             public void FieldMarkedWithEvents()
             {   // See:  https://github.com/dotnet/codeformatter/issues/216
-
                 var text = @"
 Class C1
     Private Field WithEvents As Integer
